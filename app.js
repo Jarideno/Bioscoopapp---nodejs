@@ -23,7 +23,7 @@ app.use('*', function(req, res, next){
 app.use('/api', userRoutes);
 //app.use('/api', showRoutes);
 //app.use('/api', roomRoutes);
-//app.use('/api', movieRoutes);
+app.use('/api', movieRoutes);
 
 //Error handling
 app.use('*', function (req, res, next) {
