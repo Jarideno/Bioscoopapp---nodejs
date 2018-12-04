@@ -7,7 +7,7 @@ const Movie = require('../models/movie');
 module.exports = {
 
     get(req, res, next){
-        Room.find({}, (err, document) => {
+        Room.find({}).populate('shows').exec((err, document) => {
             if(err){
                 next(new ApiError("Something went wrong!", 412));
             } else if (document == null) {
@@ -27,7 +27,7 @@ module.exports = {
             next(new ApiError(err.message, 412));
         }
 
-        Room.findById({_id: id}, (err, document) => {
+        Room.findById({_id: id}).populate('shows').exec((err, document) => {
             if(err){
                 next(new ApiError("Something went wrong!", 412));
             } else if (document == null) {

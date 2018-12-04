@@ -9,7 +9,8 @@ const roomSchema = new Schema({
     seats : {
         required: true,
         type: Number
-    }
+    },
+    shows : [{type: Schema.Types.ObjectId, ref: "Show"}]
 }, {versionKey : false});
 
 const Room = mongoose.model('Room', roomSchema);

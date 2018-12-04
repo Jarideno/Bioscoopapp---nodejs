@@ -2,6 +2,7 @@ const Show = require('../models/show');
 const ApiError = require('../models/ApiError');
 const assert = require('assert');
 const Movie = require('../models/movie');
+const Room = require('../models/room');
 
 module.exports = {
 
@@ -42,11 +43,13 @@ module.exports = {
         const date = req.body.date;
         const show = req.body;
         const movieId = req.params.id;
+        const roomId = req.params.roomId;
 
         try {
             assert(movie, 'movie must be provided');
             assert(date, 'date must be provided');
             assert(movieId, 'movieId must be provided');
+            assert(roomId)
         } catch(err) {
             next(new ApiError(err.message, 412));
         }
@@ -61,7 +64,21 @@ module.exports = {
                     } else {
                         movie.shows.push(document);
                         movie.save();
-                        res.status(200).json(document);
+                        Room.findById({_id : roomId}, (err, room) => {
+                            if(err){
+                                next(new ApiError('Something went wrong!', 412));
+                            } else {
+                                room.shows.push(document);
+                                room.save();
+                                Show.findByIdAndUpdate({_id : document._id}, { $set: {room : room.roomNumber}}, (err, result) => {
+                                    if(err){
+                                        next(new ApiError('Something went wrong!', 412));
+                                    } else {
+                                        res.status(200).json(document);
+                                    }
+                                })
+                            }
+                        })
                     }   
                 });
             }
@@ -95,6 +112,7 @@ module.exports = {
     delete(req, res , next){
         const showId = req.params.showId;
         const movieId = req.params.movieId;
+        const roomId = req.params.roomId;
 
         try {
             assert(showId, 'showId must be provided');
@@ -115,7 +133,15 @@ module.exports = {
                     } else {
                         movie.shows.splice(movie.shows.indexOf(document), 1);
                         movie.save();
-                        res.status(200).json(document);
+                        Room.findById({_id : roomId}, (err, room) => {
+                            if(err){
+                                next(new ApiError("Something went wrong!", 412));
+                            } else {
+                                room.shows.splice(room.shows.indexOf(room), 1);
+                                room.save();
+                                res.status(200).json(document);
+                            }
+                        })
                     }
                 });
             }

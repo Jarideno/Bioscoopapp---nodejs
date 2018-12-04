@@ -10,7 +10,9 @@ const showSchema = new Schema({
         required: true,
         type: String
     },
-    room: {type: Schema.Types.ObjectId, ref: "Room"}
+    room: {
+        type: Number
+    }
 }, {versionKey : false});
 
 const Show = mongoose.model('Show', showSchema);
