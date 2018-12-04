@@ -8,7 +8,7 @@ const showSchema = new Schema({
     },
     date : {
         required: true,
-        type: Date
+        type: String
     },
     room: {type: Schema.Types.ObjectId, ref: "Room"}
 }, {versionKey : false});

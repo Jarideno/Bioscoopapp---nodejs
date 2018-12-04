@@ -4,8 +4,8 @@ const showController = require('../controllers/showController');
 
 router.get('/show', showController.get);
 router.get('/show/:id', showController.getById);
-router.post('/show', showController.post);
+router.post('/show/movie/:id', showController.post);
 router.put('/show/:id', showController.put);
-router.delete('/show/:id', showController.delete);
+router.delete('/show/:showId/movie/:movieId', showController.delete);
 
 module.exports = router;

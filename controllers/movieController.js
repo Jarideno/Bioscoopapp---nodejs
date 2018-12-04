@@ -5,7 +5,7 @@ const assert = require('assert');
 module.exports = {
 
     get(req, res, next) {
-        Movie.find({}, (err, document) => {
+        Movie.find({}).populate('shows').exec((err, document) => {
             if(err){
                 next(new ApiError("Something went wrong!", 412));
             } else if (document == null) {
@@ -25,7 +25,7 @@ module.exports = {
             next(new ApiError(err.message, 412));
         }
 
-        Movie.findById({_id: id}, (err, document) => {
+        Movie.findById({_id: id}).populate('shows').exec((err, document) => {
             if(err){
                 next(new ApiError("Something went wrong!", 412));
             } else if (document == null) {
@@ -89,7 +89,7 @@ module.exports = {
             if(err){
                 next(new ApiError("Something went wrong!", 412));
             } else if (document == null) {
-                next(new ApiError("No movies found with the given id!", 412));
+                next(new ApiError("No movie found with the given id!", 412));
             } else {
                 res.status(200).json(document);
             }
