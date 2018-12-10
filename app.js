@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose   = require('mongoose');
 const ApiError = require('./models/ApiError');
+const cors = require('cors');
 const moment = require('moment');
 const userRoutes = require('./routes/userRoutes');
 const showRoutes = require('./routes/showRoutes');
@@ -15,11 +16,7 @@ mongoose.connect('mongodb://Jdeno:Biosappp2@ds245680.mlab.com:45680/biosappp2');
 
 const app = express();
 
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
+app.use(cors());
     
 app.use(bodyParser.json());
 app.use('*', function(req, res, next){
