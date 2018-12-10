@@ -14,6 +14,13 @@ const port = process.env.port || 3000;
 mongoose.connect('mongodb://Jdeno:Biosappp2@ds245680.mlab.com:45680/biosappp2');
 
 const app = express();
+
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+    
 app.use(bodyParser.json());
 app.use('*', function(req, res, next){
     next()
