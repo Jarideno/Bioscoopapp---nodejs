@@ -83,13 +83,9 @@ module.exports = {
 
     delete(req, res, next){
         const roomId = req.params.roomId;
-        const showId = req.params.showId;
-        const movieId = req.params.movieId;
 
         try {
             assert(roomId, 'roomId must be provided');
-            assert(showId, 'showId must be provided');
-            assert(movieId, 'movieId must be provided');
         } catch(err){
             next(new ApiError(err.message, 412));
         }
@@ -97,22 +93,10 @@ module.exports = {
         Room.findByIdAndDelete({_id : roomId}, (err, document) => {
             if(err){
                 next(new ApiError("Something went wrong!", 412));
+            } else if (document == null){
+                next(new ApiError("No rooms found with the given id!", 412));
             } else {
-                Show.findByIdAndDelete({_id : showId}, (err, show) => {
-                    if(err){
-                        next(new ApiError("Something went wrong!", 412));
-                    } else {
-                        Movie.findById({_id : movieId}, (err, movie) => {
-                            if(err){
-                                next(new ApiError("Something went wrong!", 412));
-                            } else {
-                                movie.shows.splice(movie.shows.indexOf(document), 1);
-                                movie.save();
-                                res.status(200).json(document);
-                            }
-                        });
-                    }
-                })
+                res.status(200).json(document);
             }
         })
     }
