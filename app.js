@@ -4,10 +4,11 @@ const mongoose   = require('mongoose');
 const ApiError = require('./models/ApiError');
 const cors = require('cors');
 const moment = require('moment');
-const userRoutes = require('./routes/userRoutes');
+const authenticationRoutes = require('./routes/authenticationRoutes');
 const showRoutes = require('./routes/showRoutes');
 const roomRoutes = require('./routes/roomRoutes');
 const movieRoutes = require('./routes/movieRoutes');
+const auth = require('./utils/authentication');
 const port = process.env.port || 3000;
 
 
@@ -15,6 +16,13 @@ const port = process.env.port || 3000;
 mongoose.connect('mongodb://Jdeno:Biosappp2@ds245680.mlab.com:45680/biosappp2');
 
 const app = express();
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Expose-Headers: Authorization");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Authorization, x-access-token, Content-Type, Accept");
+    next();
+});
 
 app.use(cors());
     
@@ -24,7 +32,9 @@ app.use('*', function(req, res, next){
 });
 
 //Routes
-app.use('/api', userRoutes);
+app.use('/api', authenticationRoutes)
+
+app.all('/api', auth.verifyToken);
 app.use('/api', showRoutes);
 app.use('/api', roomRoutes);
 app.use('/api', movieRoutes);
