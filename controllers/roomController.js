@@ -38,6 +38,27 @@ module.exports = {
         });
     },
 
+    getByRoomNumber(req, res, next){
+        const number = req.params.number;
+
+        try {
+            assert(number, 'number must be provided');
+        } catch(err){
+            next(new ApiError(err.message, 412));
+        }
+
+        Room.findOne({roomNumber: number}, (err, document) => {
+            if(err){
+                next(new ApiError("Something went wrong!", 412));
+            } else if (document == null) {
+                next(new ApiError("No rooms found!", 412));
+            } else {
+                res.status(200).json(document);
+            }
+        });
+
+    },
+
     post(req, res, next) {
         const roomNumber = req.body.roomNumber;
         const seats = req.body.seats;

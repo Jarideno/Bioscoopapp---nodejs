@@ -6,6 +6,6 @@ router.get('/show', showController.get);
 router.get('/show/:id', showController.getById);
 router.post('/show/movie/:id/room/:roomId', showController.post);
 router.put('/show/:id', showController.put);
-router.delete('/show/:showId/movie/:movieId', showController.delete);
+router.delete('/show/:showId/movie/:movieId/room/:roomId', showController.delete);
 
 module.exports = router;

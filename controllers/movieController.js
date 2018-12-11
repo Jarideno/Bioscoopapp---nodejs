@@ -36,6 +36,26 @@ module.exports = {
         });
     },
 
+    getByMovieTitle(req, res, next){
+        const title = req.params.title;
+
+        try {
+            assert(title, 'title must be provided');
+        } catch(err){
+            next(new ApiError(err.message, 412));
+        }
+
+        Movie.findOne({title: title}, (err, document) => {
+            if(err){
+                next(new ApiError("Something went wrong!", 412));
+            } else if (document == null) {
+                next(new ApiError("No movies found!", 412));
+            } else {
+                res.status(200).json(document);
+            }
+        });
+    },
+
     post(req, res, next) {
         const title = req.body.title;
         const description = req.body.description;
