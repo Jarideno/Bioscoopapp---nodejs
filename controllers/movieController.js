@@ -5,15 +5,30 @@ const assert = require('assert');
 module.exports = {
 
     get(req, res, next) {
-        Movie.find({}).populate('shows').exec((err, document) => {
-            if(err){
-                next(new ApiError("Something went wrong!", 412));
-            } else if (document == null) {
-                next(new ApiError("No movies found!", 412));
-            } else {
-                res.status(200).json(document);
-            }
-        });
+        
+        let title = req.query.title;
+        
+        if(title != undefined || title != null){
+            Movie.findOne({title: title}, (err, document) => {
+                if(err){
+                    next(new ApiError("Something went wrong!", 412));
+                } else if (document == null) {
+                    next(new ApiError("No movies found!", 412));
+                } else {
+                    res.status(200).json(document);
+                }
+            });
+        } else {
+            Movie.find({}).populate('shows').exec((err, document) => {
+                if(err){
+                    next(new ApiError("Something went wrong!", 412));
+                } else if (document == null) {
+                    next(new ApiError("No movies found!", 412));
+                } else {
+                    res.status(200).json(document);
+                }
+            });
+        }     
     },
 
     getById(req, res, next) {
@@ -26,26 +41,6 @@ module.exports = {
         }
 
         Movie.findById({_id: id}).populate('shows').exec((err, document) => {
-            if(err){
-                next(new ApiError("Something went wrong!", 412));
-            } else if (document == null) {
-                next(new ApiError("No movies found!", 412));
-            } else {
-                res.status(200).json(document);
-            }
-        });
-    },
-
-    getByMovieTitle(req, res, next){
-        const title = req.params.title;
-
-        try {
-            assert(title, 'title must be provided');
-        } catch(err){
-            next(new ApiError(err.message, 412));
-        }
-
-        Movie.findOne({title: title}, (err, document) => {
             if(err){
                 next(new ApiError("Something went wrong!", 412));
             } else if (document == null) {

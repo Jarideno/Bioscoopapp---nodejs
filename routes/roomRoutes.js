@@ -4,7 +4,6 @@ const roomController = require('../controllers/roomController');
 
 router.get('/room', roomController.get);
 router.get('/room/:id', roomController.getById);
-router.get('/room/number/:number', roomController.getByRoomNumber);
 router.post('/room', roomController.post);
 router.put('/room/:id', roomController.put);
 router.delete('/room/:roomId', roomController.delete);

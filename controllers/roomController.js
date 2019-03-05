@@ -7,15 +7,30 @@ const Movie = require('../models/movie');
 module.exports = {
 
     get(req, res, next){
-        Room.find({}).populate('shows').exec((err, document) => {
-            if(err){
-                next(new ApiError("Something went wrong!", 412));
-            } else if (document == null) {
-                next(new ApiError("No rooms found!", 412));
-            } else {
-                res.status(200).json(document);
-            }
-        });
+
+        let room = req.query.room;
+
+        if(room != undefined || room != null){
+            Room.findOne({roomNumber: room}, (err, document) => {
+                if(err){
+                    next(new ApiError("Something went wrong!", 412));
+                } else if (document == null) {
+                    next(new ApiError("No rooms found!", 412));
+                } else {
+                    res.status(200).json(document);
+                }
+            });
+        } else {
+            Room.find({}).populate('shows').exec((err, document) => {
+                if(err){
+                    next(new ApiError("Something went wrong!", 412));
+                } else if (document == null) {
+                    next(new ApiError("No rooms found!", 412));
+                } else {
+                    res.status(200).json(document);
+                }
+            });
+        }  
     },
 
     getById(req, res, next){
@@ -36,27 +51,6 @@ module.exports = {
                 res.status(200).json(document);
             }
         });
-    },
-
-    getByRoomNumber(req, res, next){
-        const number = req.params.number;
-
-        try {
-            assert(number, 'number must be provided');
-        } catch(err){
-            next(new ApiError(err.message, 412));
-        }
-
-        Room.findOne({roomNumber: number}, (err, document) => {
-            if(err){
-                next(new ApiError("Something went wrong!", 412));
-            } else if (document == null) {
-                next(new ApiError("No rooms found!", 412));
-            } else {
-                res.status(200).json(document);
-            }
-        });
-
     },
 
     post(req, res, next) {

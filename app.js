@@ -9,7 +9,7 @@ const showRoutes = require('./routes/showRoutes');
 const roomRoutes = require('./routes/roomRoutes');
 const movieRoutes = require('./routes/movieRoutes');
 const auth = require('./utils/authentication');
-const port = process.env.port || 3000;
+const port = process.env.port || 12345;
 
 
  // connect to our database
